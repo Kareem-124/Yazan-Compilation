@@ -298,7 +298,7 @@
                             <td class="fw-bold">{{ product.qty }}</td>
                             <td class="fw-bold">{{ product.cost }}</td>
                             <td class="fw-bold">
-                                <a href="#">REMOVE</a>
+                                <a href="{% url 'SM_app:remove_product_process' product_id=product.id %}">REMOVE</a>
                             </td>
                         </tr>
                         {% endfor %}

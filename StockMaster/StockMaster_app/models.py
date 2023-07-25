@@ -37,7 +37,8 @@ class User(models.Model):
     password = models.CharField(max_length=255)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    objects = UserManager() 
+    objects = UserManager()
+    # Orders
 
 class ProdcutManager(models.Manager): 
     def ProductValidator(self, postData):
@@ -70,6 +71,7 @@ class Prodcut(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='products')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    #orders
     #orders_list
 
 class Order(models.Model): 
@@ -78,6 +80,7 @@ class Order(models.Model):
     products = models.ForeignKey(Prodcut, on_delete=models.CASCADE, related_name='orders')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    user = models.ForeignKey(User,related_name='orders',on_delete=models.CASCADE)
 
 class Order_list(models.Model): 
     p_price = models.FloatField()

@@ -26,6 +26,9 @@ urlpatterns = [
     path('process_order', views.process_order, name="process_order"),
     path('clear_all_order_list_process', views.clear_all_order_list_process, name="clear_all_order_list_process"),
     path('logout_process', views.logout_process, name="logout_process"),
+    # Kareem urls Update 3: Dahsboard Remove link
+    path('remove_product_process/<int:product_id>', views.remove_product_process, name="remove_product_process"),
+    path('display_orders_page', views.display_orders_page, name="display_orders_page"),
 
 ############################## Prodcut Part ###############################
     path('display_products/', views.display_products),

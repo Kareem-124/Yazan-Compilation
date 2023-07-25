@@ -59,7 +59,7 @@ def register(request):
         s_name= request.POST['s_name'], 
         email=request.POST['email'], 
         password=request.POST['password'])
-        return render(request, 'pages-login.html')
+        return render(request, 'pages-login-2.html')
 
 #This function renders the Log In page upon button click
 def signin_page(request):
@@ -71,7 +71,7 @@ def login(request):
     if len(errors) > 0:
         for key, value in errors.items():
             messages.error(request, value)
-        return render(request, 'pages-login.html')
+        return render(request, 'pages-login-2.html')
     else:
         user = User.objects.get(email = request.POST['email'])
         request.session['user'] = user.id
@@ -144,9 +144,10 @@ def save_product(request):
 def process_order(request):
     # Get the objects from the order_list
     order_list = Order_list.objects.all()
-    # Add the objects in the order_list to the order Table
+    # Add the objects in the order_list to the order Table*
+    user = User.objects.get(id=request.session['user'])
     for order in order_list:
-        Order.objects.create(p_price = order.p_price, qty_sell = order.qty_sell, products = order.products)
+        Order.objects.create(p_price = order.p_price, qty_sell = order.qty_sell, products = order.products , user = user)
     # Delete the order_list items
     order_list_delete_all()
     return redirect('/order_page')
@@ -174,6 +175,25 @@ def check_session(request):
     else:
         user_session = False
     return user_session
+
+#--------------------------------- Kareem Update 3:-------------------------------
+# Process : Delete Product from the DB
+def remove_product_process(request,product_id):
+    product = Prodcut.objects.get(id=product_id)
+    product.delete()
+    return redirect('/dashboard')
+
+# Page: Display Orders Page
+def display_orders_page(request):
+    user = check_session(request)
+    if user:
+        orders=Order.objects.filter(user=user)
+    context = {
+        'orders' : orders,
+        'user' : user,
+    }
+    return render(request,'display_orders_page.html',context)
+    
 
 
 # ********************* THIS IS THE CALCULATION PART ***************** #
