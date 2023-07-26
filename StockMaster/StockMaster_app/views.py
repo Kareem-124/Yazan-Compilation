@@ -79,46 +79,6 @@ def login(request):
         print('user')
         return redirect('/dashboard')
     
-# ------------------ KAREEM SECTION START ---------------------------
-#Page : Order Page
-def order_page(request):
-    user = check_session(request)
-    context = {
-        'user' : user
-    }
-    return render(request,'orders_page.html',context)
-
-def is_ajax(request):
-    return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
-
-#Process: Order list
-def order_list_process(request):
-    print("I entered this sction")
-    try:
-        if is_ajax(request = request) and request.method == "POST":
-            product = Prodcut.objects.get(p_barcode=request.POST['barcode'])
-            print(product)
-            order_list_qty = request.POST['product_qty'] 
-            order_list_price = request.POST['product_price'] 
-            Order_list.objects.create(p_price=order_list_price,
-                                    qty_sell=order_list_qty,
-                                    products=product)
-            return JsonResponse({'message': 'Success'})
-    except:
-        return JsonResponse({'message': 'Invalid request Bro'})
-
-def get_order_list(request):
-    order_list = Order_list.objects.all().values('id','p_price', 'qty_sell', 'products__p_name', 'products__p_barcode')
-
-    return JsonResponse({"order_list":list(order_list)})
-# Process: Delete
-def remove_order_list(request,order_id):
-    order_list = Order_list.objects.get(id=order_id)
-    order_list.delete()
-    return JsonResponse({'message': 'Success'})
-
-# ------------------ KAREEM SECTION START ---------------------------
-
 
 #This function renders the "add new product" form
 def add_product(request):
@@ -138,6 +98,51 @@ def save_product(request):
         Prodcut.objects.create(**params)
 
     return redirect(reverse('products-page'))
+    
+# ------------------ KAREEM SECTION START ---------------------------
+#Page : Order Page
+def order_page(request):
+    user = check_session(request)
+    context = {
+        'user' : user
+    }
+    return render(request,'orders_page.html',context)
+
+def is_ajax(request):
+    return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
+
+#Process: Order list
+def order_list_process(request):
+    print("I entered this sction")
+    try:
+        if is_ajax(request = request) and request.method == "POST":
+            product = Prodcut.objects.filter(p_barcode=request.POST['barcode']).first()
+            print(product)
+            order_list_qty = request.POST['product_qty'] 
+            order_list_price = request.POST['product_price'] 
+            barcode = product.p_barcode
+            print(barcode)
+            Order_list.objects.create(p_price=order_list_price,
+                                    qty_sell=order_list_qty,
+                                    products=product.p_name,
+                                    p_barcode = barcode)
+            return JsonResponse({'message': 'Success'})
+    except:
+        return JsonResponse({'message': 'Invalid request Bro'})
+
+def get_order_list(request):
+    order_list = Order_list.objects.all().values('id','p_price', 'qty_sell', 'products', 'p_barcode')
+    print(order_list)
+    return JsonResponse({"order_list":list(order_list)})
+# Process: Delete
+def remove_order_list(request,order_id):
+    order_list = Order_list.objects.get(id=order_id)
+    order_list.delete()
+    return JsonResponse({'message': 'Success'})
+
+# ------------------ KAREEM SECTION START ---------------------------
+
+
 
 #------------------------`````````Update 2 KAREEM -----------------------
 # Process: process_order
@@ -147,7 +152,7 @@ def process_order(request):
     # Add the objects in the order_list to the order Table*
     user = User.objects.get(id=request.session['user'])
     for order in order_list:
-        Order.objects.create(p_price = order.p_price, qty_sell = order.qty_sell, products = order.products , user = user)
+        Order.objects.create(p_price = order.p_price, qty_sell = order.qty_sell, products = order.products ,p_barcode = order.p_barcode, user = user)
     # Delete the order_list items
     order_list_delete_all()
     return redirect('/order_page')

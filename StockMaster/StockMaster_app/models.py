@@ -77,7 +77,8 @@ class Prodcut(models.Model):
 class Order(models.Model): 
     p_price = models.FloatField()
     qty_sell = models.IntegerField()
-    products = models.ForeignKey(Prodcut, on_delete=models.CASCADE, related_name='orders')
+    products = models.CharField(max_length=255)
+    p_barcode = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(User,related_name='orders',on_delete=models.CASCADE)
@@ -85,7 +86,8 @@ class Order(models.Model):
 class Order_list(models.Model): 
     p_price = models.FloatField()
     qty_sell = models.IntegerField()
-    products = models.ForeignKey(Prodcut, on_delete=models.CASCADE, related_name='orders_list')
+    products = models.CharField(max_length=255)
+    p_barcode = models.IntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = ProdcutManager()

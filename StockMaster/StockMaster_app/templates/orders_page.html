@@ -321,8 +321,8 @@ $(document).ready(function () {
             $('#' + id).append('<th scope="row">' + index + '</th>');
 
 
-            var temp1 = "<td>" + response.order_list[key].products__p_name + "</td>";
-            var temp2 = "<td>" + response.order_list[key].products__p_barcode + "</td>";
+            var temp1 = "<td>" + response.order_list[key].products + "</td>";
+            var temp2 = "<td>" + response.order_list[key].p_barcode + "</td>";
             var temp3 = "<td>" + response.order_list[key].qty_sell + "</td>";
             var temp4 = "<td>" + response.order_list[key].p_price + "</td>";
             var temp5 = "<td>" + '<a href="#" id ="remove_order_list" data-target-url="remove_order_list/' + response.order_list[key].id + '" data-order-list-id="' + response.order_list[key].id + '" class="remove_order_list"> Remove </a></td>';
